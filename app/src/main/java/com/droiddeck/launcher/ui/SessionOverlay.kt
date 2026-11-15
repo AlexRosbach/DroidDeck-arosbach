@@ -328,6 +328,8 @@ class DrawerActions(
     val onQuickButton: (com.droiddeck.launcher.input.InputCommand, Boolean) -> Unit = { _, _ -> },
     val onUnfoldedControls: (Boolean) -> Unit = {},
     val unfoldedControlsWithController: Boolean = false,
+    val unfoldedGameShare: Int = 65,
+    val onUnfoldedGameShare: (Int) -> Unit = {},
     val onUnfoldedControlsWithController: (Boolean) -> Unit = {},
     val onShareLogs: () -> Unit,
     val onStop: () -> Unit,
@@ -679,14 +681,18 @@ internal fun SessionDrawer(open: Boolean, requestedPage: SessionDrawerPage, cont
                                 a.onEditSteamTouch?.let { edit ->
                                     ActionRow(stringResource(R.string.osc_steam_layout), stringResource(R.string.osc_steam_layout_hint), stringResource(R.string.ctrl_edit), edit)
                                 }
-                                if (a.steam && a.unfoldedControls != null) ToggleRow(host, "unfolded-controls", stringResource(R.string.unfolded_controls),
+                                if (a.unfoldedControls != null) ToggleRow(host, "unfolded-controls", stringResource(R.string.unfolded_controls),
                                     stringResource(R.string.unfolded_controls_hint), a.unfoldedControls,
                                     chipModifier = focus.track(page, "unfolded-controls"), onChange = a.onUnfoldedControls)
-                                if (a.steam && a.unfoldedControls == true) ToggleRow(host, "unfolded-controls-with-controller",
+                                if (a.unfoldedControls == true) ToggleRow(host, "unfolded-controls-with-controller",
                                     stringResource(R.string.unfolded_controls_with_controller),
                                     stringResource(R.string.unfolded_controls_with_controller_hint), a.unfoldedControlsWithController,
                                     chipModifier = focus.track(page, "unfolded-controls-with-controller"),
                                     onChange = a.onUnfoldedControlsWithController)
+                                if (a.unfoldedControls == true) SliderRow(
+                                    "Game area height", "Percentage of available screen height for the game",
+                                    a.unfoldedGameShare, 50..75, step = 5, format = { "$it%" },
+                                    modifier = focus.track(page, "unfolded-game-share"), onChange = a.onUnfoldedGameShare)
                             }
                             SettingsGroup(stringResource(R.string.shortcuts_title)) {
                                 if (a.steam) ToggleRow(host, "back-hold", stringResource(R.string.back_hold),
