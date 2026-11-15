@@ -69,8 +69,8 @@ object SessionDisplay {
 
     const val UNFOLDED_MIN_DP = 600
 
-    fun unfoldedGameHeight(width: Int, height: Int, tabRow: Int = 0): Int =
-        (minOf(width * 9 / 16, (height * UNFOLDED_MAX_GAME_SHARE).toInt()) - tabRow.coerceAtLeast(0)).coerceAtLeast(0) and 1.inv()
+    fun unfoldedGameHeight(width: Int, height: Int, tabRow: Int = 0, gameShare: Int = 65): Int =
+        ((height * gameShare.coerceIn(50, 75) / 100) - tabRow.coerceAtLeast(0)).coerceIn(0, height) and 1.inv()
 
     fun unfoldedControlsWanted(
         enabled: Boolean,
