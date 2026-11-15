@@ -91,6 +91,7 @@ class ModeSettings(
     val steamController: String? = null,
     val unfoldedControls: Boolean? = null,
     val unfoldedControlsWithController: Boolean = false,
+    val unfoldedGameShare: Int = 65,
     val startupSession: String = SessionPrefs.STARTUP_OFF,
     val bootMovie: String? = null,
     val bootMovieSound: Boolean = true,
@@ -146,6 +147,7 @@ class ModeSettingsActions(
     val onSteamController: (String) -> Unit = {},
     val onUnfoldedControls: (Boolean) -> Unit = {},
     val onUnfoldedControlsWithController: (Boolean) -> Unit = {},
+    val onUnfoldedGameShare: (Int) -> Unit = {},
     val onStartupSession: (String) -> Unit = {},
     val onBootMovie: (String) -> Unit = {},
     val onBootMovieSound: (Boolean) -> Unit = {},
@@ -295,15 +297,20 @@ fun ModeSheetRows(s: ModeSettings, a: ModeSettingsActions, tab: String, extras: 
                 else stringResource(R.string.mode_controller_note),
                 onPick = a.onSteamController,
             )
-            if (steam && s.unfoldedControls != null) ToggleRow(
+            if (s.unfoldedControls != null) ToggleRow(
                 host, "unfolded-controls", stringResource(R.string.unfolded_controls),
                 stringResource(R.string.unfolded_controls_hint),
                 s.unfoldedControls, onChange = a.onUnfoldedControls,
             )
-            if (steam && s.unfoldedControls == true) ToggleRow(
+            if (s.unfoldedControls == true) ToggleRow(
                 host, "unfolded-controls-with-controller", stringResource(R.string.unfolded_controls_with_controller),
                 stringResource(R.string.unfolded_controls_with_controller_hint),
                 s.unfoldedControlsWithController, onChange = a.onUnfoldedControlsWithController,
+            )
+            if (s.unfoldedControls == true) SliderRow(
+                "Game area height", "Percentage of available screen height for the game",
+                s.unfoldedGameShare, 50..75, step = 5, format = { "$it%" },
+                onChange = a.onUnfoldedGameShare,
             )
             if (steam) ToggleRow(
                 host, "back-hold", stringResource(R.string.back_hold),
