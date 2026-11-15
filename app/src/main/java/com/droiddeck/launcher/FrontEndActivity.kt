@@ -2475,7 +2475,8 @@ class FrontEndActivity : ComponentActivity(), com.droiddeck.launcher.ui.AgentPet
                 steamDownloadsInBackground = steamDownloadsInBackground,
                 pipSupported = com.droiddeck.launcher.session.SessionPipController.supported(this),
                 pipAutoEnter = pipAutoEnter,
-                unfoldedControls = if (mode == SessionService.MODE_STEAM) unfoldedControls else null,
+                unfoldedControls = unfoldedControls,
+                unfoldedGameShare = unfoldedGameShare,
                 unfoldedControlsWithController = unfoldedControlsWithController,
                 oscMode = if (mode == SessionService.MODE_STEAM) oscMode else null,
                 backHold = backHold,
@@ -2530,6 +2531,7 @@ class FrontEndActivity : ComponentActivity(), com.droiddeck.launcher.ui.AgentPet
                 },
                 onPipAutoEnter = { on -> SessionPrefs.setPipAutoEnter(this, on); pipAutoEnter = on },
                 onUnfoldedControls = { on -> SessionPrefs.setUnfoldedControls(this, on); unfoldedControls = on },
+                onUnfoldedGameShare = { share -> SessionPrefs.setUnfoldedGameShare(this, share); unfoldedGameShare = share },
                 onUnfoldedControlsWithController = { on ->
                     SessionPrefs.setUnfoldedControlsWithController(this, on); unfoldedControlsWithController = on
                 },
@@ -2832,6 +2834,7 @@ class FrontEndActivity : ComponentActivity(), com.droiddeck.launcher.ui.AgentPet
     private var pipAutoEnter by mutableStateOf(false)
     private var unfoldedControls by mutableStateOf(false)
     private var unfoldedControlsWithController by mutableStateOf(false)
+    private var unfoldedGameShare by mutableIntStateOf(65)
     private var shaderPrecacheGeneration = 0
 
     private fun loadShaderPrecache(mode: String) {
@@ -2850,6 +2853,7 @@ class FrontEndActivity : ComponentActivity(), com.droiddeck.launcher.ui.AgentPet
         pipAutoEnter = SessionPrefs.pipAutoEnter(this)
         unfoldedControls = SessionPrefs.unfoldedControls(this)
         unfoldedControlsWithController = SessionPrefs.unfoldedControlsWithController(this)
+        unfoldedGameShare = SessionPrefs.unfoldedGameShare(this)
         resolution = SessionPrefs.resolutionChoice(this, mode, com.droiddeck.launcher.session.SessionDisplay.panelSize(this))
         fexPreset = SessionPrefs.fexPreset(this)
         forceSsbs = SessionPrefs.forceSsbs(this)
