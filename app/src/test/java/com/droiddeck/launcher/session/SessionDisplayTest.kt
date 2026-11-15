@@ -53,17 +53,21 @@ class SessionDisplayTest {
         assertEquals(2560 to 1440, SessionDisplay.resolveChoice(2560 to 1440, SessionDisplay.MATCH_SCREEN))
     }
 
-    @Test fun unfoldedControlsKeepTheGameSixteenByNineAcrossTheWidth() {
-        assertEquals(606, SessionDisplay.unfoldedGameHeight(1080, 1920))
-        assertEquals(1376, SessionDisplay.unfoldedGameHeight(2448, 1848))
-        assertEquals(1038, SessionDisplay.unfoldedGameHeight(1848, 2448))
-        assertEquals(864, SessionDisplay.unfoldedGameHeight(1920, 1080))
+    @Test fun unfoldedGameHeightUsesConfigurableGameShareAndStaysEven() {
+        assertEquals(1200, SessionDisplay.unfoldedGameHeight(2448, 1848))
+        assertEquals(1248, SessionDisplay.unfoldedGameHeight(1848, 1920))
+        assertEquals(1200, SessionDisplay.unfoldedGameHeight(2448, 1848, 0, 65))
+        assertEquals(1292, SessionDisplay.unfoldedGameHeight(2448, 1848, 0, 70))
+        assertEquals(1386, SessionDisplay.unfoldedGameHeight(2448, 1848, 0, 75))
+        assertEquals(924, SessionDisplay.unfoldedGameHeight(2448, 1848, 0, 50))
+        assertEquals(1386, SessionDisplay.unfoldedGameHeight(2448, 1848, 0, 100))
+        assertEquals(924, SessionDisplay.unfoldedGameHeight(2448, 1848, 0, -10))
     }
 
-    @Test fun aTabRowUnderTheBarComesOutOfTheGameNotTheControls() {
-        assertEquals(1376, SessionDisplay.unfoldedGameHeight(2448, 1848, 0))
-        assertEquals(1240, SessionDisplay.unfoldedGameHeight(2448, 1848, 136))
-        assertEquals(1376, SessionDisplay.unfoldedGameHeight(2448, 1848, -20))
+    @Test fun tabRowReducesGameAreaWithoutMakingHeightNegative() {
+        assertEquals(1200, SessionDisplay.unfoldedGameHeight(2448, 1848, 0))
+        assertEquals(1064, SessionDisplay.unfoldedGameHeight(2448, 1848, 136))
+        assertEquals(1200, SessionDisplay.unfoldedGameHeight(2448, 1848, -20))
         assertEquals(0, SessionDisplay.unfoldedGameHeight(200, 100, 500))
     }
 

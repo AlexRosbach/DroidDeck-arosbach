@@ -164,6 +164,7 @@ class SessionActivity : ComponentActivity(), SurfaceHolder.Callback, com.droidde
     private var pipAutoEnter by mutableStateOf(false)
     private var unfoldedControls by mutableStateOf(false)
     private var unfoldedControlsWithController by mutableStateOf(false)
+    private var unfoldedGameShare by mutableIntStateOf(65)
     private var adaptiveSticks by mutableStateOf<Boolean?>(null)
     private var quickButtons by mutableStateOf<Map<InputCommand, Boolean>>(emptyMap())
     private var picturePosition by mutableStateOf("center")
@@ -1535,6 +1536,12 @@ class SessionActivity : ComponentActivity(), SurfaceHolder.Callback, com.droidde
                 updateOnScreenControls()
             },
             unfoldedControlsWithController = unfoldedControlsWithController,
+            unfoldedGameShare = unfoldedGameShare,
+            onUnfoldedGameShare = { share ->
+                SessionPrefs.setUnfoldedGameShare(this@SessionActivity, share)
+                unfoldedGameShare = share
+                applyUnfoldedControls()
+            },
             onUnfoldedControlsWithController = ::chooseUnfoldedControlsWithController,
             onBackground = { drawerOpen = false; pip.background(); moveTaskToBack(true) },
             onShareLogs = { drawerOpen = false; shareCurrentSessionLogs() },
@@ -2058,6 +2065,7 @@ class SessionActivity : ComponentActivity(), SurfaceHolder.Callback, com.droidde
         pipAutoEnter = SessionPrefs.pipAutoEnter(this)
         unfoldedControls = SessionPrefs.unfoldedControls(this)
         unfoldedControlsWithController = SessionPrefs.unfoldedControlsWithController(this)
+        unfoldedGameShare = SessionPrefs.unfoldedGameShare(this)
         picturePosition = SessionPrefs.picturePosition(this)
         hudOn = SessionPrefs.hudEnabled(this)
         hudConfig = DroidDeckHudConfig.load(this)
@@ -3897,7 +3905,7 @@ class SessionActivity : ComponentActivity(), SurfaceHolder.Callback, com.droidde
         val tabRow = unfoldedColumn?.getChildAt(0)?.height?.let {
             it - (com.droiddeck.launcher.ui.BAR_HEIGHT.value * resources.displayMetrics.density + 0.5f).toInt()
         } ?: 0
-        val gameHeight = if (wanted) com.droiddeck.launcher.session.SessionDisplay.unfoldedGameHeight(width, height, tabRow)
+        val gameHeight = if (wanted) com.droiddeck.launcher.session.SessionDisplay.unfoldedGameHeight(width, height, tabRow, SessionPrefs.unfoldedGameShare(this))
             else FrameLayout.LayoutParams.MATCH_PARENT
         val params = surfaceView.layoutParams as FrameLayout.LayoutParams
         if (params.height != gameHeight) {
