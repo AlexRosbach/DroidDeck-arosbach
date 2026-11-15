@@ -55,6 +55,7 @@ class SessionDisplayTest {
 
     @Test fun unfoldedGameHeightUsesConfigurableGameShareAndStaysEven() {
         assertEquals(1200, SessionDisplay.unfoldedGameHeight(2448, 1848))
+        assertEquals(1248, SessionDisplay.unfoldedGameHeight(1848, 1920))
         assertEquals(1200, SessionDisplay.unfoldedGameHeight(2448, 1848, 0, 65))
         assertEquals(1292, SessionDisplay.unfoldedGameHeight(2448, 1848, 0, 70))
         assertEquals(1386, SessionDisplay.unfoldedGameHeight(2448, 1848, 0, 75))
